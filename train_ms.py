@@ -494,9 +494,30 @@ def train_and_evaluate(
                         n_ckpts_to_keep=keep_ckpts,
                         sort_by_time=True,
                     )
-
+        
         global_step += 1
-
+    utils.save_checkpoint(
+        net_g,
+        optim_g,
+        hps.train.learning_rate,
+        epoch+1,
+        os.path.join(hps.model_dir, "G_latest.pth".format(global_step)),
+    )
+    utils.save_checkpoint(
+        net_d,
+        optim_d,
+        hps.train.learning_rate,
+        epoch+1,
+        os.path.join(hps.model_dir, "D_latest.pth".format(global_step)),
+    )
+    if net_dur_disc is not None:
+        utils.save_checkpoint(
+            net_dur_disc,
+            optim_dur_disc,
+            hps.train.learning_rate,
+            epoch+1,
+            os.path.join(hps.model_dir, "DUR_latest.pth".format(global_step)),
+        )
     if rank == 0:
         logger.info("====> Epoch: {}".format(epoch))
 
