@@ -42,6 +42,11 @@ torch.backends.cuda.enable_mem_efficient_sdp(
 torch.backends.cuda.enable_math_sdp(True)
 global_step = 0
 
+os.environ['MASTER_ADDR'] = 'localhost'
+os.environ['MASTER_PORT'] = '12355'
+os.environ['RANK'] = '0'
+os.environ['WORLD_SIZE'] = '1'
+
 
 def run():
     dist.init_process_group(
@@ -198,6 +203,7 @@ def run():
         print(e)
         epoch_str = 1
         global_step = 0
+        dur_resume_lr = hps.train.learning_rate
 
     scheduler_g = torch.optim.lr_scheduler.ExponentialLR(
         optim_g, gamma=hps.train.lr_decay, last_epoch=epoch_str - 2

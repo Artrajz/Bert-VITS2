@@ -7,6 +7,7 @@ from text import cleaned_text_to_sequence, get_bert
 import argparse
 import torch.multiprocessing as mp
 
+add_blank = None
 
 def process_line(line):
     rank = mp.current_process()._identity
@@ -21,7 +22,8 @@ def process_line(line):
     word2ph = [i for i in word2ph]
     phone, tone, language = cleaned_text_to_sequence(phone, tone, language_str)
 
-    if hps.data.add_blank:
+    # if hps.data.add_blank:
+    if add_blank:
         phone = commons.intersperse(phone, 0)
         tone = commons.intersperse(tone, 0)
         language = commons.intersperse(language, 0)
@@ -47,6 +49,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     config_path = args.config
     hps = utils.get_hparams_from_file(config_path)
+    add_blank = hps.data.add_blank
     lines = []
     with open(hps.data.training_files, encoding="utf-8") as f:
         lines.extend(f.readlines())
