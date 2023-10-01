@@ -9,6 +9,7 @@ import torch.multiprocessing as mp
 
 add_blank = None
 
+
 def process_line(line):
     rank = mp.current_process()._identity
     rank = rank[0] if len(rank) > 0 else 0
